@@ -1,16 +1,26 @@
 const conexao = require('../infraestrutura/conexao');
+const uploadDeArquivos = require('../arquivos/uploadDeArquivos');
 
 class Pet{
     adiciona(pet, res){
         const query = "INSERT INTO Pets SET ?";
 
-        conexao.query(query, pet, erro => {
-            if(erro){
-                res.status(400).json(erro);
+        uploadDeArquivos(pet.imagem, pet.nome, (erro, novoCaminho) => {
+            
+            if (erro){
+                res.status(400).json({ erro });
             } else{
-                res.status(200).json(pet);
+                const novoPet = {nome: pet.nome, imagem: novoCaminho};
+
+                conexao.query(query, novoPet, erro => {
+                    if(erro){
+                        res.status(400).json(erro);
+                    } else{
+                        res.status(200).json(novoPet);
+                    }
+                });
             }
-        });
+        });        
     }
 }
 
