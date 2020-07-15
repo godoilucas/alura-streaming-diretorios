@@ -11,10 +11,8 @@ module.exports = (caminho, nomeDoArquivo, callbackImagemCriada) => {
     
         fs.createReadStream(caminho)
             .pipe(fs.createWriteStream(novoCaminho))
-            .on('finish', () => callbackImagemCriada(false, novoCaminho));
+            .on('finish', () => callbackImagemCriada(novoCaminho));
     } else{
-        console.log('Erro! Tipo inválido');
-        const erro = 'Tipo é inválido!';
-        callbackImagemCriada(erro);
+        throw new Error('Tipo é inválido!');
     }   
 }
